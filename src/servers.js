@@ -23,13 +23,16 @@ module.exports = class Servers {
             })
         })
     }
-    get_messages(server_id){
-        const query = `SELECT m.*, u.username FROM messages m LEFT JOIN app_users u on u.id = m.user where m.server_id = ${server_id}`
+    get_messages(server_id, user_id){
+        const query = `SELECT m.*, u.username, u.id = ${user_id} is_yours FROM messages m LEFT JOIN app_users u on u.id = m.user where m.server_id = ${server_id} order by m.id desc limit 40`
 
         return new Promise((resolve, reject) => {
             this.#db.all(query, (err, rows) => {
                 if (err) reject(err)
-                else resolve(rows)
+                else {
+                    rows.sort((a, b) => a.id - b.id)
+                    resolve(rows)
+                }
             })
         })
     }

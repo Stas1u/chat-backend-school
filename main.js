@@ -108,7 +108,7 @@ app.post("/main/send-message", authenticateToken, async (req, res) => {
 })
 app.get("/main/messages", authenticateToken, async (req, res) => {
     try{
-        const data = await servers.get_messages(1)
+        const data = await servers.get_messages(1, req.user.id)
         res.send(data)
     }
     catch (e) { res.status(400).send({message: `${e}`}) }
